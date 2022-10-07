@@ -1,0 +1,125 @@
+@import './colors';
+
+.container {
+    height: 100%;
+}
+
+.logo {
+    position: absolute;
+    top: 107px;
+    left: 97px;
+}
+
+.content-container {
+    padding-right: 50px;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 auto;
+    background: url('../../public/images/hero-image.svg') no-repeat left center;
+    background-size: clamp(500px, 50%, 600px) auto;
+    .login-form {
+        width: clamp(500px, 50%, 700px);
+        padding: 0 5%;
+    }
+    .welcome-text {
+        color: $header-text-color;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 54px;
+        margin: 0;
+    }
+    .login-desc {
+        color: $primary-text-color;
+        font-weight: 400;
+        font-size: 20px;
+        margin: 10px 0 60px 0;
+    }
+    .field {
+        margin-bottom: 24px;
+    }
+    .password-field {
+        position: relative;
+        height: 50px;
+        input {
+            padding-right: 60px;
+        }
+    }
+    .error-text {
+        color: $danger;
+    }
+    .show-text {
+        color: $primary-color;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+        position: absolute;
+        top: 50%;
+        right: 19.5px;
+        transform: translateY(-50%);
+    }
+    .forgot-password {
+        font-weight: 600;
+        font-size: 12px;
+        color: $primary-color;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    .login-btn {
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: $white;
+        background-color: $primary-color;
+        border: none;
+        display: block;
+        width: 100%;
+        height: 48px;
+        border-radius: 8px;
+        margin-top: 30px;
+        &:disabled {
+            cursor: not-allowed;
+            color: rgba($color: $white, $alpha: 0.5);
+        }
+    }
+}
+
+input {
+    border: 2px solid $input-outline;
+    color: $primary-text-color;
+    border-radius: 5px;
+    width: 100%;
+    height: 50px;
+    font-size: 14px;
+    padding-left: 16px;
+    &::placeholder {
+        color: rgba($color: $primary-text-color, $alpha: 0.6)
+    }
+    &.error {
+        color: $danger;
+        border-color: $danger;
+    }
+}
+
+@media (max-width: 1000px) {
+    .logo {
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .content-container {
+        background: none;
+        justify-content: center;
+        padding-right: 0;
+        .login-form {
+            padding: 0;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .content-container .login-form {
+        padding: 5%;
+    }
+}

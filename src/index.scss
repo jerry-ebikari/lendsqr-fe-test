@@ -10,6 +10,14 @@
   --higher-opacity: 0.1;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -22,4 +30,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (max-width: 768px) {
+  .invisible-on-mobile {
+    display: none;
+  }
+}
+
+
+// Utility classes
+.clickable {
+  cursor: pointer;
 }
