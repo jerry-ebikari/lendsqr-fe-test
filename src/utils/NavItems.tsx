@@ -2,42 +2,42 @@ const customers: {displayText: string, iconName: string, route: string}[] = [
     {
         displayText: "Users",
         iconName: "users",
-        route: ""
+        route: "users"
     },
     {
         displayText: "Guarantors",
         iconName: "guarantors",
-        route: ""
+        route: "guarantors"
     },
     {
         displayText: "Loans",
         iconName: "loans",
-        route: ""
+        route: "loans"
     },
     {
         displayText: "Decision Models",
         iconName: "decision-models",
-        route: ""
+        route: "decision-models"
     },
     {
         displayText: "Savings",
         iconName: "savings",
-        route: ""
+        route: "savings"
     },
     {
         displayText: "Loan Requests",
         iconName: "loan-requests",
-        route: ""
+        route: "loan-requests"
     },
     {
         displayText: "Whitelist",
         iconName: "whitelist",
-        route: ""
+        route: "whitelist"
     },
     {
         displayText: "Karma",
         iconName: "karma",
-        route: ""
+        route: "karma"
     }
 ];
 
@@ -45,47 +45,47 @@ const businesses: {displayText: string, iconName: string, route: string}[] = [
     {
         displayText: "Organization",
         iconName: "organization",
-        route: ""
+        route: "organization"
     },
     {
         displayText: "Loan Products",
         iconName: "loan-requests",
-        route: ""
+        route: "loan-requests"
     },
     {
         displayText: "Savings Products",
         iconName: "savings-products",
-        route: ""
+        route: "savings-products"
     },
     {
         displayText: "Fees and Charges",
         iconName: "fees-and-charges",
-        route: ""
+        route: "fees-and-charges"
     },
     {
         displayText: "Transactions",
         iconName: "transactions",
-        route: ""
+        route: "transactions"
     },
     {
         displayText: "Services",
         iconName: "services",
-        route: ""
+        route: "services"
     },
     {
         displayText: "Service Account",
         iconName: "service-account",
-        route: ""
+        route: "service-account"
     },
     {
         displayText: "Settlements",
         iconName: "settlements",
-        route: ""
+        route: "settlements"
     },
     {
         displayText: "Reports",
         iconName: "reports",
-        route: ""
+        route: "reports"
     }
 ];
 
@@ -93,17 +93,17 @@ const settings: {displayText: string, iconName: string, route: string}[] = [
     {
         displayText: "Preferences",
         iconName: "preferences",
-        route: ""
+        route: "preferences"
     },
     {
         displayText: "Fees and Pricing",
         iconName: "fees-and-pricing",
-        route: ""
+        route: "fees-and-pricing"
     },
     {
         displayText: "Audit Logs",
         iconName: "audit-logs",
-        route: ""
+        route: "audit-logs"
     }
 ];
 

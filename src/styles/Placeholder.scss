@@ -1,0 +1,9 @@
+@import "./colors";
+
+.page-name {
+    height: 100%;
+    text-transform: uppercase;
+    color: $header-text-color;
+    font-size: 20px;
+    font-weight: 500;
+}

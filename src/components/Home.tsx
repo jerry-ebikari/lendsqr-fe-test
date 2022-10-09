@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Home.scss';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,6 +9,9 @@ let mobileWidth = 992; // Change sidebar type at this width
 function Home() {
   let [sidebarType, setSidebarType] = useState("side");
   let [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  let pathName = location.pathname.replace("/", "");
   useEffect(() => {
     setSidebarType(window.innerWidth < mobileWidth ? "overlay" : "side");
     window.addEventListener("resize", () => {
@@ -19,10 +22,15 @@ function Home() {
       window.removeEventListener("resize", () => {})
     }
   })
-  const closeSidebar = (ev: any) => {
+  const closeSidebarOv = (ev: any) => {
     if (sidebarOpen) {
       ev.stopPropagation();
       setSidebarOpen(false);
+    }
+  }
+  const closeSidebar = () => {
+    if (sidebarOpen) {
+      setSidebarOpen(false)
     }
   }
   const toggleSidebar = () => {
@@ -36,7 +44,7 @@ function Home() {
         </div>
 
         {/* HEADER */}
-        <header className={"top-nav " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebar}>
+        <header className={"top-nav " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebarOv}>
           <img src="images/logo.svg" alt="logo" className='header-logo' />
           <div className={"search-field " + sidebarType}>
             <input type="text" name='search' placeholder='Search for anything'/>
@@ -60,14 +68,17 @@ function Home() {
         {/* SIDEBAR */}
         <div className={"sidebar " + sidebarType + " " + (sidebarOpen ? "open" : "close")}>
           <div className="navigation">
-            <div className="clickable navlink organization">
+            <div className="clickable navlink organization" onClick={closeSidebar}>
               <img src="images/icons/organization.svg" alt="" className='nav-icon' />
               <div className="dropdown-text">
                 <span className='navitem-title'>Switch Organization</span>
                 <img src="images/icons/arrow-down-outline.svg" alt="" />
               </div>
             </div>
-            <div className="clickable navlink dashboard active">
+            <div className={"clickable navlink dashboard" + (pathName == "" ? " active" : "")} onClick={() => {
+              closeSidebar();
+              navigate('/');
+            }}>
               <img src="images/icons/home.svg" alt="" className='nav-icon' />
               <div className="dropdown-text">
                 <span className='navitem-title'>Dashboard</span>
@@ -78,12 +89,20 @@ function Home() {
             <div className="navlinks">
               <p className="nav-category">customer</p>
               {customers.map((customer: any) => {
-                return (<div className="clickable navlink" key={customer.displayText}>
-                  <img src={"images/icons/" + customer.iconName + ".svg"} alt="" className='nav-icon' />
-                  <div className="dropdown-text">
-                    <span className='navitem-title'>{customer.displayText}</span>
+                return (
+                  <div
+                    className={"clickable navlink" + (pathName == customer.route ? " active" : "")}
+                    onClick={() => {
+                      closeSidebar();
+                      navigate(customer.route);
+                    }}
+                    key={customer.displayText}
+                  >
+                    <img src={"images/icons/" + customer.iconName + ".svg"} alt="" className='nav-icon' />
+                    <div className="dropdown-text">
+                      <span className='navitem-title'>{customer.displayText}</span>
+                    </div>
                   </div>
-                </div>
                 )
               })}
             </div>
@@ -92,12 +111,20 @@ function Home() {
             <div className="navlinks">
               <p className="nav-category">businesses</p>
               {businesses.map((business: any) => {
-                return (<div className="clickable navlink" key={business.displayText}>
-                  <img src={"images/icons/" + business.iconName + ".svg"} alt="" className='nav-icon' />
-                  <div className="dropdown-text">
-                    <span className='navitem-title'>{business.displayText}</span>
+                return (
+                  <div
+                    className={"clickable navlink" + (pathName == business.route ? " active" : "")}
+                    onClick={() => {
+                      closeSidebar();
+                      navigate(business.route);
+                    }}
+                    key={business.displayText}
+                  >
+                    <img src={"images/icons/" + business.iconName + ".svg"} alt="" className='nav-icon' />
+                    <div className="dropdown-text">
+                      <span className='navitem-title'>{business.displayText}</span>
+                    </div>
                   </div>
-                </div>
                 )
               })}
             </div>
@@ -106,12 +133,20 @@ function Home() {
             <div className="navlinks">
               <p className="nav-category">settings</p>
               {settings.map((setting: any) => {
-                return (<div className="clickable navlink" key={setting.displayText}>
-                  <img src={"images/icons/" + setting.iconName + ".svg"} alt="" className='nav-icon' />
-                  <div className="dropdown-text">
-                    <span className='navitem-title'>{setting.displayText}</span>
+                return (
+                  <div
+                    className={"clickable navlink" + (pathName == setting.route ? " active" : "")}
+                    onClick={() => {
+                      closeSidebar();
+                      navigate(setting.route);
+                    }}
+                    key={setting.displayText}
+                  >
+                    <img src={"images/icons/" + setting.iconName + ".svg"} alt="" className='nav-icon' />
+                    <div className="dropdown-text">
+                      <span className='navitem-title'>{setting.displayText}</span>
+                    </div>
                   </div>
-                </div>
                 )
               })}
             </div>
@@ -119,7 +154,7 @@ function Home() {
         </div>
 
         {/* DYNAMIC CONTENT */}
-        <div className={"content " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebar}>
+        <div className={"content " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebarOv}>
           <Outlet />
         </div>
       </div>
