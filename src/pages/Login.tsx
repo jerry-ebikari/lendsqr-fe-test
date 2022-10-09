@@ -33,9 +33,9 @@ function Login() {
         checkValidity(name, isValid);
     }
     return (
-        <div className='container'>
-            <img src="images/logo.svg" alt="logo" className='logo' />
-            <div className='content-container'>
+        <div className='login-container'>
+            <img src="images/logo.svg" alt="logo" className='login-logo' />
+            <div className='login-content-container'>
                 <form className='login-form'>
                     <h2 className='welcome-text'>Welcome!</h2>
                     <p className='login-desc'>Enter details to login.</p>
@@ -44,7 +44,7 @@ function Login() {
                             type="email"
                             name='email'
                             placeholder='Email'
-                            className={(emailBlurred && !emailValid) ? "error" : ""}
+                            className={"login-input " + ((emailBlurred && !emailValid) ? "error" : "")}
                             onInput={handleInput}
                             onBlur={handleBlur}
                             required
@@ -66,7 +66,7 @@ function Login() {
                                 type={isPasswordVisible ? 'text' : 'password'}
                                 name="password"
                                 placeholder='Password'
-                                className={(passwordBlurred && !passwordValid)? "error" : ""}
+                                className={"login-input " + ((passwordBlurred && !passwordValid)? "error" : "")}
                                 onInput={handleInput}
                                 onBlur={handleBlur}
                                 required

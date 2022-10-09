@@ -32,14 +32,24 @@ code {
     monospace;
 }
 
-@media (max-width: 768px) {
-  .invisible-on-mobile {
-    display: none;
-  }
-}
-
 
 // Utility classes
 .clickable {
   cursor: pointer;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.d-none {
+  display: none;
 }
