@@ -154,7 +154,7 @@ function Home() {
         </div>
 
         {/* DYNAMIC CONTENT */}
-        <div className={"content " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebarOv}>
+        <div className={"dynamic-content " + sidebarType + (sidebarOpen ? " overlayed" : "")} onClick={closeSidebarOv}>
           <Outlet />
         </div>
       </div>

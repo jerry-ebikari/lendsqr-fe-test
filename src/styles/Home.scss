@@ -36,6 +36,7 @@ $screen-offset-right: 60px;
         }
         &.overlay {
             height: $header-mobile-height;
+            padding-left: 20px;
         }
         .header-logo {
             width: 144px;
@@ -112,12 +113,18 @@ $screen-offset-right: 60px;
             }
         }
     }
-    .content {
+    .dynamic-content {
         background-color: $page-background;
         flex: 1;
         margin-top: $header-desktop-height;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-bottom: 30px;
+        overflow-y: auto;
         &.overlay {
             margin-top: $header-mobile-height;
+            padding-left: clamp(10px, 5vw, 20px);
+            padding-right: clamp(10px, 5vw, 20px);
         }
     }
 }
