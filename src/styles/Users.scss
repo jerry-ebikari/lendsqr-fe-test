@@ -90,6 +90,8 @@
     }
     .table-footer {
         display: flex;
+        flex-wrap: wrap;
+        row-gap: 20px;
         justify-content: space-between;
         align-items: center;
         .num-records {
@@ -112,6 +114,79 @@
                 outline: none;
                 border: none;
                 padding: 7px 12px;
+            }
+        }
+    }
+}
+.user-menu-item {
+    display: flex;
+    column-gap: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    p {
+        font-size: 14px;
+        font-weight: 500;
+        color: $primary-text-color;
+    }
+}
+#filter {
+    border: 1px solid rgba(84, 95, 125, 0.14);
+    box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+    .filter-form {
+        min-width: 250px;
+        padding: 30px 20px;
+        .field {
+            display: flex;
+            row-gap: 6px;
+            flex-direction: column;
+            label {
+                font-size: 14px;
+                font-weight: 500;
+                color: $primary-text-color;
+            }
+        }
+        .field:not(:last-child) {
+            margin-bottom: 20px;
+        }
+        .custom-select, input, .date-label {
+            align-items: center;
+            width: 100%;
+            outline: none;
+            border: 1px solid $input-outline;
+            color: $primary-text-color;
+            border-radius: 8px;
+            padding-left: 20px;
+            height: 40px;
+        }
+        #date {
+            // display: none;
+        }
+        .date-label {
+            display: flex;
+            align-items: center;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            .btn {
+                flex: 1;
+                height: 40px;
+                border-radius: 8px;
+                border: 1px solid $primary-text-color;
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .filter-btn {
+                border-color: $primary-color;
+                color: $white;
+                background-color: $primary-color;
+            }
+            .reset-btn {
+                color: $primary-text-color;
+                background-color: $white;
             }
         }
     }

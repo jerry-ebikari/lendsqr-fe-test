@@ -133,7 +133,10 @@ $screen-offset-right: 60px;
     overflow-y: auto;
     padding-bottom: 20px;
     .navigation {
-        margin-top: 39px;
+        padding-top: 39px;
+        &.overlay {
+            padding-top: 55px;
+        }
     }
     .navlinks {
         margin-top: 40px;
@@ -176,6 +179,10 @@ $screen-offset-right: 60px;
         .dropdown-text img {
             margin-left: 10px;
         }
+    }
+    .logout {
+        border-top: 1px solid $input-outline;
+        margin-top: 40px;
     }
 }
 .sidebar.overlay {

@@ -32,13 +32,17 @@ function Login() {
         name == "email" ? setEmailBlurred(true): setPasswordBlurred(true);
         checkValidity(name, isValid);
     }
+    const login = () => {
+        localStorage.setItem("isLoggedIn", "true");
+        navigate("/")
+    }
     return (
         <div className='login-container'>
             <img src="images/logo.svg" alt="logo" className='login-logo' />
-            <div className='login-content-container'>
+            <div className='login-content-container flex align-center'>
                 <form className='login-form'>
-                    <h2 className='welcome-text'>Welcome!</h2>
-                    <p className='login-desc'>Enter details to login.</p>
+                    <h2 className='welcome-text header-text'>Welcome!</h2>
+                    <p className='login-desc primary-text'>Enter details to login.</p>
                     <div className="field">
                         <input
                             type="email"
@@ -71,17 +75,17 @@ function Login() {
                                 onBlur={handleBlur}
                                 required
                             />
-                            <span className='clickable show-text' onClick={togglePasswordVisibility}>
+                            <span className='clickable show-text fs-12' onClick={togglePasswordVisibility}>
                                 {isPasswordVisible ? 'hide' : 'show'}
                             </span>
                         </div>
                         {passwordBlurred && !passwordValid ? <span className='error-text'>Enter password</span> : <></>}
                     </div>
-                    <a className='clickable forgot-password'>forgot password?</a>
+                    <a className='clickable forgot-password fs-12 fw-600'>forgot password?</a>
                     <button
                         type='button'
-                        className='clickable login-btn'
-                        onClick={() => {navigate("/dashboard")}}
+                        className='clickable login-btn fs-14 fw-600'
+                        onClick={login}
                         disabled={!emailValid || !passwordValid}
                     >
                         Log in

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Pagination from '@mui/material/Pagination';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import "../styles/Users.scss";
 import { getAllUsers } from '../services/userInfoService';
+import formatNumber from '../utils/currencyFormatter';
 
 
 const statInfo: {title: string, number: number, iconName: string}[] = [
@@ -27,33 +31,37 @@ const statInfo: {title: string, number: number, iconName: string}[] = [
     }
 ]
 
-function formatNumber(num: number) {
-    if (num < 1000) return num;
-    let numAsString = String(num);
-    let numberOfDigits = numAsString.length;
-    let left = "";
-    let right = "";
-    let numberOfLeftCharacters = numberOfDigits % 3 == 0 ? 3 : numberOfDigits % 3;
-    left = numAsString.slice(0, numberOfLeftCharacters);
-    right = numAsString.slice(numberOfLeftCharacters);
-    right = right.replace(/(.{3})/g, "$1,")
-    let result = left + "," + right;
-    return result.replace(/,$/, "");
-}
-
 interface UserData {
     data: any
 }
 
 
 function Users() {
+    const navigate = useNavigate();
     let [users, setUsers] = useState<UserData>({data: null});
-    let [dataFetched, setDataFetched] = useState(false);
     let [numberOfRecords, setNumberOfRecords] = useState(10);
     let [numberOfRecordsToDisplay, setNumberOfRecordsToDisplay] = useState(10);
     let [recordsToDisplay, setRecordsToDisplay] = useState<UserData>({data: null});
     let [numPages, setNumPages] = useState(1);
     let [page, setPage] = useState(1);
+    let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    let [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
+    let [userId, setUserId] = useState<null | any>(null);
+    const open = Boolean(anchorEl);
+    const filterOpen = Boolean(filterAnchor);
+    const openMenu = (ev: React.MouseEvent<HTMLElement>, id: any) => {
+        setAnchorEl(ev.currentTarget);
+        setUserId(id);
+    }
+    const showFilter = (ev: React.MouseEvent<HTMLElement>) => {
+        setFilterAnchor(ev.currentTarget);
+    }
+    const closeMenu = () => {
+        setAnchorEl(null);
+        setFilterAnchor(null);
+    }
+
+    // FUNCTIONS
     const updateNumberOfRecordsToDisplay = (ev: any) => {
         setNumberOfRecordsToDisplay(ev.target.value);
         setNumPages(Math.ceil(users.data.length / ev.target.value));
@@ -72,6 +80,11 @@ function Users() {
         let newRecords = users.data.slice(startIndex, endIndex)
         setRecordsToDisplay({data: newRecords});
     }
+    const viewUser = () => {
+        closeMenu();
+        navigate("/user/" + userId);
+    }
+    // USE EFFECT
     useEffect(() => {
         getAllUsers()
         .then((res) => {
@@ -84,7 +97,6 @@ function Users() {
             console.log(err)
         })
     }, [])
-    useEffect(() => {}, [recordsToDisplay.data])
     return (
         <div className='users-container'>
             <h1 className='page-header'>Users</h1>
@@ -107,27 +119,57 @@ function Users() {
                 {/* TABLE HEADERS */}
                 <div className="first column header cell">
                     <span className='header-column-text'>Organization</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell">
                     <span className='header-column-text'>Username</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell">
                     <span className='header-column-text'>Email</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell phone">
                     <span className='header-column-text'>Phone number</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell">
                     <span className='header-column-text'>Date joined</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell">
                     <span className='header-column-text'>Status</span>
-                    <img className="clickable" src="images/icons/filter.svg" alt="" />
+                    <img
+                        className="clickable"
+                        src="images/icons/filter.svg"
+                        alt=""
+                        onClick={showFilter}
+                    />
                 </div>
                 <div className="column header cell last"></div>
 
@@ -154,7 +196,12 @@ function Users() {
                                 <span className='cell-text'>Active</span>
                             </div>
                             <div className={"last cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
-                                <img className='clickable' src="images/icons/vertical-dots.svg" alt="" />
+                                <img
+                                    className='clickable'
+                                    src="images/icons/vertical-dots.svg"
+                                    alt=""
+                                    onClick={(ev) => {openMenu(ev, user.id)}}
+                                />
                             </div>
                         </>
                     )
@@ -173,6 +220,85 @@ function Users() {
                 </div>
                 {numPages > 1 ? <Pagination count={numPages} page={page} onChange={updatePage} shape="rounded" /> : <></>}
             </div>
+            {/* USERS MENU */}
+            <Menu
+                id="user-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={closeMenu}
+                MenuListProps={{
+                'aria-labelledby': 'basic-button',
+                }}
+            >
+                <MenuItem onClick={viewUser}>
+                    <div className='user-menu-item'>
+                        <img src="images/icons/eye.svg" alt="" />
+                        <p>View Details</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={closeMenu}>
+                    <div className='user-menu-item'>
+                        <img src="images/icons/blacklist.svg" alt="" />
+                        <p>Blacklist User</p>
+                    </div>
+                </MenuItem>
+                <MenuItem onClick={closeMenu}>
+                    <div className='user-menu-item'>
+                        <img src="images/icons/activate.svg" alt="" />
+                        <p>Activate User</p>
+                    </div>
+                </MenuItem>
+            </Menu>
+
+            {/* FILTER */}
+            <Menu
+                id="filter"
+                anchorEl={filterAnchor}
+                open={filterOpen}
+                onClose={closeMenu}
+                MenuListProps={{
+                'aria-labelledby': 'basic-button',
+                }}
+            >
+                <form className='filter-form'>
+                    <div className="field">
+                        <label htmlFor="organization">Organization</label>
+                        <select className='custom-select' name="organization" id="organization">
+                            <option value="">10</option>
+                            <option value="">20</option>
+                        </select>
+                    </div>
+                    <div className="field">
+                        <label htmlFor="username">Username</label>
+                        <input type="text" id="username" placeholder='User' />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" placeholder='Email' />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="date">Date</label>
+                        {/* <label htmlFor="date" className='date-label'>Date</label> */}
+                        {/* <Calendar></Calendar> */}
+                        <input type="date" id="date" />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder='Phone Number' />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="status">Status</label>
+                        <select className='custom-select' name="status" id="status">
+                            <option value="">10</option>
+                            <option value="">20</option>
+                        </select>
+                    </div>
+                    <div className="buttons">
+                        <button className="clickable btn reset-btn" type='reset'>Reset</button>
+                        <button className="clickable btn filter-btn" type='submit'>Filter</button>
+                    </div>
+                </form>
+            </Menu>
         </div>
     )
 }

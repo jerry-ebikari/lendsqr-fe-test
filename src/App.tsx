@@ -6,14 +6,16 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import Users from './pages/Users';
 import Placeholder from './pages/Placeholder';
+import User from './pages/User';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />}>
-          <Route path='' element={<Dashboard />} />
+          <Route path='' element={<Users />} />
           <Route path='users' element={<Users />} />
+          <Route path='user/:id' element={<User />}/>
           <Route path='*' element={<Placeholder />} />
         </Route>
         <Route path='/login' element={<Login />} />

@@ -50,7 +50,7 @@ const businesses: {displayText: string, iconName: string, route: string}[] = [
     {
         displayText: "Loan Products",
         iconName: "loan-requests",
-        route: "loan-requests"
+        route: "loan-products"
     },
     {
         displayText: "Savings Products",
@@ -104,6 +104,11 @@ const settings: {displayText: string, iconName: string, route: string}[] = [
         displayText: "Audit Logs",
         iconName: "audit-logs",
         route: "audit-logs"
+    },
+    {
+        displayText: "System Messages",
+        iconName: "system-messages",
+        route: "system-messages"
     }
 ];
 

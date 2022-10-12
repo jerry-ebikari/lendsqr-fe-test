@@ -1,14 +1,4 @@
-:root {
-  --primary-color: #39CDCC;
-  --primary-text-color: #545F7D;
-  --header-text-color: #213F7D;
-  --page-background: #E5E5E5;
-  --pending: #E9B200;
-  --active: #39CD62;
-  --danger: #E4033B;
-  --lower-opacity: 0.06;
-  --higher-opacity: 0.1;
-}
+@import "./styles/colors";
 
 * {
   box-sizing: border-box;
@@ -48,6 +38,38 @@ code {
 
 .align-center {
   align-items: center;
+}
+
+.primary-text {
+  color: $primary-text-color;
+}
+
+.header-text {
+  color: $header-text-color;
+}
+
+.fs-12 {
+  font-size: 12px;
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.fs-16 {
+  font-size: 16px;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
 }
 
 .d-none {

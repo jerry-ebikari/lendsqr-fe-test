@@ -13,9 +13,7 @@
 .login-content-container {
     padding-right: 50px;
     height: 100%;
-    display: flex;
     justify-content: flex-end;
-    align-items: center;
     margin: 0 auto;
     background: url('../../public/images/hero-image.svg') no-repeat left center;
     background-size: clamp(500px, 50%, 600px) auto;
@@ -24,14 +22,12 @@
         padding: 0 5%;
     }
     .welcome-text {
-        color: $header-text-color;
         font-weight: 700;
         font-size: 40px;
         line-height: 54px;
         margin: 0;
     }
     .login-desc {
-        color: $primary-text-color;
         font-weight: 400;
         font-size: 20px;
         margin: 10px 0 60px 0;
@@ -52,7 +48,6 @@
     .show-text {
         color: $primary-color;
         text-transform: uppercase;
-        font-size: 12px;
         font-weight: 600;
         position: absolute;
         top: 50%;
@@ -63,15 +58,11 @@
         color: $danger;
     }
     .forgot-password {
-        font-weight: 600;
-        font-size: 12px;
         color: $primary-color;
         text-transform: uppercase;
         display: inline-block;
     }
     .login-btn {
-        font-weight: 600;
-        font-size: 14px;
         text-transform: uppercase;
         color: $white;
         background-color: $primary-color;
