@@ -86,7 +86,20 @@
             &.email {
                 text-transform: lowercase;
             }
+            &.status {
+                padding: 7px 13px;
+                border-radius: 100px;
+            }
+            &.inactive {
+                color: $primary-text-color;
+                background-color: rgba($color: $primary-text-color, $alpha: 0.08);
+            }
+            &.active {
+                color: $active;
+                background-color: rgba($color: $active, $alpha: 0.08);
+            }
         }
+        
     }
     .table-footer {
         display: flex;

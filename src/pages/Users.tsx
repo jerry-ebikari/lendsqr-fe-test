@@ -4,7 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import "../styles/Users.scss";
-import { getAllUsers } from '../services/userInfoService';
+import { getAllUsers, checkUserActive } from '../services/userInfoService';
 import formatNumber from '../utils/currencyFormatter';
 
 
@@ -193,7 +193,13 @@ function Users() {
                                 <span className='cell-text'>{user.createdAt}</span>
                             </div>
                             <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
-                                <span className='cell-text'>Active</span>
+                                <span
+                                    className={'cell-text status ' + (
+                                        checkUserActive(user.createdAt) ? "active" : "inactive"
+                                    )}
+                                >
+                                    {checkUserActive(user.createdAt) ? "Active" : "Inactive"}
+                                </span>
                             </div>
                             <div className={"last cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                 <img
