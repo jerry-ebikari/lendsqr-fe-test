@@ -21,13 +21,14 @@ interface UserData {
 function Users() {
     const navigate = useNavigate();
     let [users, setUsers] = useState<UserData>({data: null});
+    let [failedToFetchUsers, setFailedToFetchUsers] = useState(false);
     let [numberOfRecords, setNumberOfRecords] = useState(10);
     let [numberOfRecordsToDisplay, setNumberOfRecordsToDisplay] = useState(10);
     let [recordsToDisplay, setRecordsToDisplay] = useState<UserData>({data: null});
     let [numPages, setNumPages] = useState(1);
     let [page, setPage] = useState(1);
-    let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    let [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
+    let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);  // anchor element for user menu
+    let [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);  // anchor element for filter modal
     let [userId, setUserId] = useState<any>(null);
     let [orgs, setOrgs] = useState<any>(null);
     let [filterState, setFilterState] = useState({
@@ -135,6 +136,7 @@ function Users() {
 
     // GET USER DATA
     const getUserData = () => {
+        setFailedToFetchUsers(false);
         getAllUsers()
         .then((res) => {
             let allUsers: any[] = res.data;
@@ -152,7 +154,7 @@ function Users() {
             })
         })
         .catch((err) => {
-            console.log(err)
+            setFailedToFetchUsers(true);
         })
     }
 
@@ -494,7 +496,15 @@ function Users() {
                 </Menu>  
             </>) : (
             <div className='loading'>
-                <CircularProgress />
+                {
+                    failedToFetchUsers ?
+                    (<p className='retry-prompt'>
+                        Failed to fetch data, click
+                        <span className='clickable retry' onClick={getUserData}>here</span>
+                        to retry
+                    </p>) :
+                    <CircularProgress />
+                }
             </div>
             )}
             

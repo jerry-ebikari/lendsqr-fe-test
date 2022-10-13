@@ -10,6 +10,7 @@ import "../styles/User.scss";
 function User() {
     let { id } = useParams();
     const navigate = useNavigate();
+    let [failedToFetchUsers, setFailedToFetchUsers] = useState(false);
     let [user, setUser] = useState<any>(null);
     let [active, setActive] = useState("general");
 
@@ -25,13 +26,20 @@ function User() {
         });
     }
 
-    useEffect(() => {
+    const getUserData = () => {
+        setFailedToFetchUsers(false);
         getUser(id ? id : "")
         .then((res) => {
             localStorage.setItem("user", JSON.stringify(res.data))
             setUser(res.data);
-            // console.log(res.data);
         })
+        .catch((err) => {
+            setFailedToFetchUsers(true);
+        })
+    }
+
+    useEffect(() => {
+        getUserData();
     }, [])
     return (
         <div className='user-container'>
@@ -206,7 +214,15 @@ function User() {
             </div>
             </>) : (
             <div className='loading'>
+            {
+                failedToFetchUsers ?
+                (<p className='retry-prompt'>
+                    Failed to fetch data, click
+                    <span className='clickable retry' onClick={getUserData}>here</span>
+                    to retry
+                </p>) :
                 <CircularProgress />
+            }
             </div>)}
 
             {/* TOAST CONTAINER */}

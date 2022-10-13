@@ -75,3 +75,11 @@ code {
 .d-none {
   display: none;
 }
+
+.retry-prompt {
+  font-weight: 600;
+  .retry {
+      text-decoration: underline;
+      margin: 0 8px;
+  }
+}
