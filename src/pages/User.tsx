@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import { getUser } from "../services/userInfoService";
-import formatNumber from '../utils/currencyFormatter';
+import formatNumber from '../utils/numberFormatter';
 import "../styles/User.scss";
 
 function User() {

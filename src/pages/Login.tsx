@@ -38,7 +38,7 @@ function Login() {
     }
     return (
         <div className='login-container'>
-            <img src="images/logo.svg" alt="logo" className='login-logo' />
+            <img src="/images/logo.svg" alt="logo" className='login-logo' />
             <div className='login-content-container flex align-center'>
                 <form className='login-form'>
                     <h2 className='welcome-text header-text'>Welcome!</h2>

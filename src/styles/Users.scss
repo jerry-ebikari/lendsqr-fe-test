@@ -75,6 +75,9 @@
         .phone {
             min-width: 150px;
         }
+        .date-joined {
+            min-width: 150px;
+        }
         .header-column-text {
             font-size: 12px;
             font-weight: 600;
@@ -129,6 +132,17 @@
                 padding: 7px 12px;
             }
         }
+    }
+
+    .loading {
+        height: 150px;
+        background-color: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        margin-top: 40px;
     }
 }
 .user-menu-item {
@@ -213,11 +227,15 @@
         }
     }
 }
+
+.MuiPagination-ul {
+    flex-wrap: nowrap !important;
+}
 @media (max-width: 576px) {
     .users-container {
         .users-table {
-            padding: 5px;
-            
+            padding: 15px;
+            padding-top: 30px;
         }
         .stats {
             grid-template-columns: 1fr;
