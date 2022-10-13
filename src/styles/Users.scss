@@ -44,7 +44,7 @@
         display: grid;
         grid-template-columns: repeat(7, auto);
         min-width: 80%;
-        // max-height: 730px;
+        // min-height: 200px;
         overflow-x: auto;
         margin-bottom: 20px;
         .cell:not(.first) {
@@ -76,7 +76,7 @@
             min-width: 150px;
         }
         .date-joined {
-            min-width: 150px;
+            min-width: 120px;
         }
         .header-column-text {
             font-size: 12px;

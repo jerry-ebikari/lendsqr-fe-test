@@ -217,6 +217,26 @@ $screen-offset-right: 60px;
     left: 0;
 }
 
-.d-none {
-    display: none;
+.dialog-buttons {
+    width: 100%;
+    gap: 20px;
+    margin-bottom: 20px;
+    .btn {
+        height: 40px;
+        border-radius: 4px;
+        padding: 0 30px;
+        cursor: pointer;
+        outline: none;
+        background-color: $white;
+        border: 2px solid transparent;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .logout-btn {
+        color: $danger;
+        border-color: $danger;
+    }
+    .cancel-btn {
+        border-color: black;
+    }
 }

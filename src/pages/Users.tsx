@@ -8,6 +8,7 @@ import "../styles/Users.scss";
 import { getAllUsers, checkUserActive } from '../services/userInfoService';
 import formatNumber from '../utils/numberFormatter';
 import { formatDate } from '../utils/dateFormatter';
+import compareDates from "../utils/compareDates";
 
 
 interface UserData {
@@ -55,6 +56,8 @@ function Users() {
     const closeMenu = () => {
         setAnchorEl(null);
         setFilterAnchor(null);
+        // toast("Menus closed");
+        // toast.success("Success Notification !");
     }
 
     // UPDATE NUMBER OF RECORDS TO DISPLAY
@@ -74,13 +77,7 @@ function Users() {
     }
 
     // UPDATE PAGE NUMBER
-    const updatePage = (ev: any, value: number) => {
-        setPage(value);
-        let startIndex = value * numberOfRecordsToDisplay - numberOfRecordsToDisplay;
-        let endIndex = value * numberOfRecordsToDisplay;
-        let newRecords = (isFilterApplied ? filteredRecords : users.data).slice(startIndex, endIndex)
-        setRecordsToDisplay({data: newRecords});
-    }
+    const updatePage = (ev: any, value: number) => setPage(value);
 
     // NAVIGATE TO USER DETAILS PAGE
     const viewUser = () => {
@@ -97,7 +94,8 @@ function Users() {
                 (filterState.username ? user.userName.toLowerCase().includes(filterState.username.toLowerCase()) : true) &&
                 (filterState.email ? user.email.toLowerCase().includes(filterState.email.toLowerCase()) : true) && 
                 (filterState.status ? ((checkUserActive(user.lastActiveDate) ? "active" : "inactive") == filterState.status) : true) &&
-                (filterState.phoneNumber ? user.phoneNumber.toLowerCase().includes(filterState.phoneNumber.toLowerCase()) : true)
+                (filterState.phoneNumber ? user.phoneNumber.toLowerCase().includes(filterState.phoneNumber.toLowerCase()) : true) && 
+                (filterState.date ? compareDates(filterState.date, user.createdAt) : true)
             )
         }));
         setFilterApplied(true);
@@ -113,6 +111,7 @@ function Users() {
             phoneNumber: "",
             status: ""
         });
+        setPage(1);
         setFilterApplied(false);
         closeMenu();
     }
@@ -128,13 +127,17 @@ function Users() {
     const getUserData = () => {
         getAllUsers()
         .then((res) => {
-            setUsers({data: [...res.data]});
-            setNumberOfRecords(res.data.length);
-            setRecordsToDisplay({data: res.data.slice(0, numberOfRecordsToDisplay)});
-            setNumPages(Math.ceil(res.data.length / numberOfRecordsToDisplay));
+            let allUsers: any[] = res.data;
+            allUsers.sort((a: any, b: any) => {
+                return a.userName.toLowerCase() > b.userName.toLowerCase() ? 1 : -1;
+            });
+            setUsers({data: [...allUsers]});
+            setNumberOfRecords(allUsers.length);
+            setRecordsToDisplay({data: allUsers.slice(0, numberOfRecordsToDisplay)});
+            setNumPages(Math.ceil(allUsers.length / numberOfRecordsToDisplay));
             setOrgs(() => {
                 let orgNames: any = [];
-                res.data.forEach((user: any) => orgNames.push(user.orgName));
+                allUsers.forEach((user: any) => orgNames.push(user.orgName));
                 return Array.from(new Set(orgNames.sort()));
             })
         })
@@ -155,7 +158,19 @@ function Users() {
             updateRecordsDisplayed(numberOfRecordsToDisplay);
             closeMenu();
         }
-    }, [filteredRecords, isFilterApplied])
+    }, [filteredRecords, isFilterApplied]);
+
+    // ON PAGE CHANGE
+    useEffect(() => {
+        if (users.data) {
+            let startIndex = page * numberOfRecordsToDisplay - numberOfRecordsToDisplay;
+            let endIndex = page * numberOfRecordsToDisplay;
+            let newRecords = (isFilterApplied ? filteredRecords : users.data).slice(startIndex, endIndex)
+            setRecordsToDisplay({data: newRecords});
+        }
+    }, [page])
+
+
     return (
         <div className='users-container'>
             <h1 className='page-header'>Users</h1>
@@ -251,24 +266,40 @@ function Users() {
                     <div className="column header cell last"></div>
 
                     {/* TABLE BODY */}
-                    {recordsToDisplay.data ? recordsToDisplay.data.map((user: any, index: number) => {
+                    {recordsToDisplay.data ?
+                    (recordsToDisplay.data.length ?
+                        // IF THERE ARE RECORDS TO DISPLAY
+                        recordsToDisplay.data.map((user: any, index: number) => {
                         return (
                             <>
-                                <div className={"first cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* TH1 */}
+                                <div
+                                    className={"first cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}
+                                >
                                     <span className='cell-text'>{user.orgName}</span>
                                 </div>
+
+                                {/* TH2 */}
                                 <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{user.userName}</span>
                                 </div>
+
+                                {/* TH3 */}
                                 <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text email'>{user.email}</span>
                                 </div>
+
+                                {/* TH4 */}
                                 <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{user.phoneNumber}</span>
                                 </div>
+
+                                {/* TH5 */}
                                 <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{formatDate(user.createdAt)}</span>
                                 </div>
+
+                                {/* TH6 */}
                                 <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <span
                                         className={'cell-text status ' + (
@@ -278,6 +309,8 @@ function Users() {
                                         {checkUserActive(user.lastActiveDate) ? "Active" : "Inactive"}
                                     </span>
                                 </div>
+
+                                {/* TH7 */}
                                 <div className={"last cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
                                     <img
                                         className='clickable'
@@ -288,7 +321,21 @@ function Users() {
                                 </div>
                             </>
                         )
-                    }) : <></>}
+                    }) : (
+                    // IF TABLE IS EMPTY
+                    <>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                    </>
+                    )) : 
+                    // WHILE DATA IS LOADING
+                    <></>
+                    }
                 </div>
                 <div className="table-footer">
                     <div className="num-records">
