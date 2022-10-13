@@ -8,7 +8,6 @@ import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Users.scss";
 import { getAllUsers, checkUserActive } from '../services/userInfoService';
-import formatNumber from '../utils/numberFormatter';
 import { formatDate } from '../utils/dateFormatter';
 import compareDates from "../utils/compareDates";
 
@@ -59,14 +58,12 @@ function Users() {
     const closeMenu = () => {
         setAnchorEl(null);
         setFilterAnchor(null);
-        // toast("Menus closed");
-        // toast.success("Success Notification !");
     }
 
     // UPDATE NUMBER OF RECORDS TO DISPLAY
     const updateNumberOfRecordsToDisplay = (ev: any) => {
         setNumberOfRecordsToDisplay(ev.target.value);
-        setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users.data).length / ev.target.value));
+        setPage(1);
         updateRecordsDisplayed(ev.target.value);
     }
 
@@ -75,7 +72,6 @@ function Users() {
         let startIndex = page * value - value;
         let endIndex = page * value;
         let newRecords = (isFilterApplied ? filteredRecords : users.data).slice(startIndex, endIndex);
-        setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users.data).length / numberOfRecordsToDisplay));
         setRecordsToDisplay({data: newRecords});
     }
 
@@ -127,12 +123,12 @@ function Users() {
     }
 
     // SHOW NOT AVAILABLE MESSAGE
-  const notAvailable = () => {
-    toast.error("Not available", {
-      autoClose: 2000,
-      pauseOnFocusLoss: false
-    });
-  }
+    const notAvailable = () => {
+        toast.error("Not available", {
+        autoClose: 2000,
+        pauseOnFocusLoss: false
+        });
+    }
 
     // GET USER DATA
     const getUserData = () => {
@@ -182,6 +178,11 @@ function Users() {
         }
     }, [page])
 
+    useEffect(() => {
+        if (users.data) {
+            setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users.data).length / numberOfRecordsToDisplay))
+        }
+    }, [recordsToDisplay])
 
     return (
         <div className='users-container'>
