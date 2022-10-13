@@ -76,7 +76,7 @@
             min-width: 150px;
         }
         .date-joined {
-            min-width: 120px;
+            min-width: 130px;
         }
         .header-column-text {
             font-size: 12px;
@@ -86,6 +86,7 @@
         .cell-text {
             font-size: 14px;
             font-weight: 400;
+            color: $primary-text-color;
             &.email {
                 text-transform: lowercase;
             }

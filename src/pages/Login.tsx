@@ -38,6 +38,7 @@ function Login() {
     }
     return (
         <div className='login-container'>
+            <div className="pane"></div>
             <img src="/images/logo.svg" alt="logo" className='login-logo' />
             <div className='login-content-container flex align-center'>
                 <form className='login-form'>

@@ -11,6 +11,9 @@
 }
 
 .login-content-container {
+    * {
+        font-family: "AvenirNext";
+    }
     padding-right: 50px;
     height: 100%;
     justify-content: flex-end;
@@ -97,6 +100,15 @@
 }
 
 @media (max-width: 1000px) {
+    .login-container {
+        position: relative;
+        .pane {
+            position: fixed;
+            height: 80px;
+            width: 100%;
+            background-color: white;
+        }
+    }
     .login-logo {
         top: 30px;
         left: 50%;

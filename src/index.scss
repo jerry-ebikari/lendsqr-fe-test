@@ -2,6 +2,17 @@
 
 * {
   box-sizing: border-box;
+  font-family: Worksans;
+}
+
+@font-face {
+  font-family: "AvenirNext";
+  src: url("./fonts/avenir-next.ttf");
+}
+
+@font-face {
+  font-family: Worksans;
+  src: url("./fonts/worksans.ttf");
 }
 
 html, body, #root {

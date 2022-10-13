@@ -204,7 +204,7 @@ $screen-offset-right: 60px;
 
 .sidebar.side {
     margin-top: $header-desktop-height;
-    width: clamp(250px, 22%, 283px);
+    width: clamp(260px, 22%, 283px);
 }
 
 .overlayed::after {

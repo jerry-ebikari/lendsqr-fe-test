@@ -178,6 +178,7 @@ function Users() {
         }
     }, [page])
 
+    // WHEN RECORDS TO DISPLAY CHANGES
     useEffect(() => {
         if (users.data) {
             setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users.data).length / numberOfRecordsToDisplay))
