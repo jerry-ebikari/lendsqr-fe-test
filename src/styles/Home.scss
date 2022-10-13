@@ -193,7 +193,7 @@ $screen-offset-right: 60px;
     transition: transform .6s;
     height: 100%;
     background-color: $white;
-    width: clamp(150px, 65%, 300px);
+    width: clamp(200px, 75%, 300px);
     &.close {
         transform: translateX(0%);
     }
