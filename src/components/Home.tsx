@@ -21,10 +21,7 @@ function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   let pathName = location.pathname.replace("/", "");
-
   const [open, setOpen] = useState(false);
-
-
 
 
   useEffect(() => {

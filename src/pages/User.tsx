@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
-import { getUser } from "../services/userInfoService";
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getUser, checkUserActive } from "../services/userInfoService";
 import formatNumber from '../utils/numberFormatter';
 import "../styles/User.scss";
 
@@ -10,9 +12,19 @@ function User() {
     const navigate = useNavigate();
     let [user, setUser] = useState<any>(null);
     let [active, setActive] = useState("general");
+
     const changeActive = (ev: any) => {
         setActive(ev.target.dataset.tab);
     }
+
+    // SHOW NOT AVAILABLE MESSAGE
+    const notAvailable = () => {
+        toast.error("Not available", {
+        autoClose: 2000,
+        pauseOnFocusLoss: false
+        });
+    }
+
     useEffect(() => {
         getUser(id ? id : "")
         .then((res) => {
@@ -29,10 +41,12 @@ function User() {
             </div>
             <div className="flex align-center page-title-section">
                 <h1 className='page-header'>User Details</h1>
-                <div className="flex buttons">
-                    <button className='clickable btn blacklist-btn'>Blacklist User</button>
-                    <button className='clickable btn activate-btn'>Activate User</button>
-                </div>
+                {user ? (<div className="flex buttons">
+                    <button className='clickable btn blacklist-btn' onClick={notAvailable}>Blacklist User</button>
+                    {!checkUserActive(user.lastActiveDate) ? (<button className='clickable btn activate-btn' onClick={notAvailable}>
+                        Activate User
+                    </button>) : <></>}
+                </div>) : <></>}
             </div>
             {user ? (<>
             <div className="flex basic-info">
@@ -194,6 +208,9 @@ function User() {
             <div className='loading'>
                 <CircularProgress />
             </div>)}
+
+            {/* TOAST CONTAINER */}
+            <ToastContainer transition={Slide} />
         </div>
     )
 }

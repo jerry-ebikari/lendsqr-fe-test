@@ -89,8 +89,8 @@
     }
     #avatar-img {
         align-self: center;
-        width: clamp(50px, 10vw, 100px);
-        height: clamp(50px, 10vw, 100px);
+        width: clamp(70px, 10vw, 100px);
+        height: clamp(70px, 10vw, 100px);
         object-fit: cover;
         border-radius: 50%;
     }
@@ -186,5 +186,15 @@
         align-items: center;
         box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.04);
         border-radius: 4px;
+    }
+}
+
+@media (max-width: 600px) {
+    .user-container {
+        .basic-info {
+            .divider, .tier, .bank {
+                display: none;
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@ import Pagination from '@mui/material/Pagination';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Users.scss";
 import { getAllUsers, checkUserActive } from '../services/userInfoService';
 import formatNumber from '../utils/numberFormatter';
@@ -122,6 +124,14 @@ function Users() {
             return {...prev, [ev.target.name]: ev.target.value}
         });
     }
+
+    // SHOW NOT AVAILABLE MESSAGE
+  const notAvailable = () => {
+    toast.error("Not available", {
+      autoClose: 2000,
+      pauseOnFocusLoss: false
+    });
+  }
 
     // GET USER DATA
     const getUserData = () => {
@@ -366,13 +376,19 @@ function Users() {
                             <p>View Details</p>
                         </div>
                     </MenuItem>
-                    <MenuItem onClick={closeMenu}>
+                    <MenuItem onClick={() => {
+                        closeMenu();
+                        notAvailable();
+                    }}>
                         <div className='user-menu-item'>
                             <img src="images/icons/blacklist.svg" alt="" />
                             <p>Blacklist User</p>
                         </div>
                     </MenuItem>
-                    <MenuItem onClick={closeMenu}>
+                    <MenuItem onClick={() => {
+                        closeMenu();
+                        notAvailable();
+                    }}>
                         <div className='user-menu-item'>
                             <img src="images/icons/activate.svg" alt="" />
                             <p>Activate User</p>
@@ -481,6 +497,9 @@ function Users() {
                 <CircularProgress />
             </div>
             )}
+            
+            {/* TOAST CONTAINER */}
+            <ToastContainer transition={Slide} />
         </div>
     )
 }
