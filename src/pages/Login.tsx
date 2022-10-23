@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.scss';
 
@@ -16,6 +21,7 @@ function Login() {
     let [emailValid, setEmailValid] = useState(false);
     let [emailBlurred, setEmailBlurred] = useState(false);
     let [passwordBlurred, setPasswordBlurred] = useState(false);
+    const [open, setOpen] = useState(true);
     let togglePasswordVisibility = () => {
         setPasswordVisibility(prevState => !prevState);
     }
@@ -35,6 +41,10 @@ function Login() {
     const login = () => {
         localStorage.setItem("isLoggedIn", "true");
         navigate("/")
+    }
+
+    const handleClose = () => {
+        setOpen(false);
     }
     return (
         <div className='login-container'>
@@ -93,6 +103,43 @@ function Login() {
                     </button>
                 </form>
             </div>
+
+        {/* INSTRUCTION DIALOG */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            <p style={{
+                        textAlign: "center",
+                        fontWeight: "600",
+                        color: "#213F7D",
+                        margin: "0",
+                        fontSize: "20px"
+                    }}>
+                        Welcome!
+                    </p>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+            <p style={{
+                        textAlign: "center",
+                        fontWeight: "600",
+                        margin: "0",
+                        fontSize: "16px"
+                    }}>
+                    Enter any email address and password of your choosing
+                </p> 
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <div className="flex justify-center align-center dialog-buttons">
+              <button className='btn cancel-btn' onClick={handleClose} autoFocus>OK</button>
+            </div>
+          </DialogActions>
+      </Dialog>
         </div>
     )
 }
