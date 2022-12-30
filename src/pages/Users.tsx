@@ -12,18 +12,13 @@ import { formatDate } from '../utils/dateFormatter';
 import compareDates from "../utils/compareDates";
 
 
-interface UserData {
-    data: any
-}
-
-
 function Users() {
     const navigate = useNavigate();
-    let [users, setUsers] = useState<UserData>({data: null});
+    let [users, setUsers] = useState<any[] | null>(null); // all users
     let [failedToFetchUsers, setFailedToFetchUsers] = useState(false);
     let [numberOfRecords, setNumberOfRecords] = useState(10);
     let [numberOfRecordsToDisplay, setNumberOfRecordsToDisplay] = useState(10);
-    let [recordsToDisplay, setRecordsToDisplay] = useState<UserData>({data: null});
+    let [recordsToDisplay, setRecordsToDisplay] = useState<any[] | null>(null);
     let [numPages, setNumPages] = useState(1);
     let [page, setPage] = useState(1);
     let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);  // anchor element for user menu
@@ -44,9 +39,9 @@ function Users() {
     const filterOpen = Boolean(filterAnchor);
 
     // OPEN USER MENU
-    const openMenu = (ev: React.MouseEvent<HTMLElement>, id: any) => {
+    const openMenu = (ev: React.MouseEvent<HTMLElement>, user: any) => {
         setAnchorEl(ev.currentTarget);
-        setUserId(id);
+        setUserId(user.id);
     }
 
     // OPEN FILTER MODAL
@@ -71,8 +66,8 @@ function Users() {
     const updateRecordsDisplayed = (value: number) => {
         let startIndex = page * value - value;
         let endIndex = page * value;
-        let newRecords = (isFilterApplied ? filteredRecords : users.data).slice(startIndex, endIndex);
-        setRecordsToDisplay({data: newRecords});
+        let newRecords = (isFilterApplied ? filteredRecords : users).slice(startIndex, endIndex);
+        setRecordsToDisplay(newRecords);
     }
 
     // UPDATE PAGE NUMBER
@@ -87,7 +82,7 @@ function Users() {
     // FILTER BUTTON CLICKED
     const filter = (ev: any) => {
         ev.preventDefault();
-        setFilteredRecords(users.data.filter((user: any) => {
+        setFilteredRecords(users?.filter((user: any) => {
             return (
                 (filterState.organization ? (user.orgName == filterState.organization) : true) &&
                 (filterState.username ? user.userName.toLowerCase().includes(filterState.username.toLowerCase()) : true) &&
@@ -125,8 +120,8 @@ function Users() {
     // SHOW NOT AVAILABLE MESSAGE
     const notAvailable = () => {
         toast.error("Not available", {
-        autoClose: 2000,
-        pauseOnFocusLoss: false
+            autoClose: 2000,
+            pauseOnFocusLoss: false
         });
     }
 
@@ -134,14 +129,14 @@ function Users() {
     const getUserData = () => {
         setFailedToFetchUsers(false);
         getAllUsers()
-        .then((res) => {
+        .then((res: any) => {
             let allUsers: any[] = res.data;
             allUsers.sort((a: any, b: any) => {
                 return a.userName.toLowerCase() > b.userName.toLowerCase() ? 1 : -1;
             });
-            setUsers({data: [...allUsers]});
+            setUsers([...allUsers]);
             setNumberOfRecords(allUsers.length);
-            setRecordsToDisplay({data: allUsers.slice(0, numberOfRecordsToDisplay)});
+            setRecordsToDisplay(allUsers.slice(0, numberOfRecordsToDisplay));
             setNumPages(Math.ceil(allUsers.length / numberOfRecordsToDisplay));
             setOrgs(() => {
                 let orgNames: any = [];
@@ -149,7 +144,7 @@ function Users() {
                 return Array.from(new Set(orgNames.sort()));
             })
         })
-        .catch((err) => {
+        .catch((err: any) => {
             setFailedToFetchUsers(true);
         })
     }
@@ -161,7 +156,7 @@ function Users() {
 
     // ON FILTER APPLY
     useEffect(() => {
-        if (users.data) {
+        if (users) {
             setPage(1);
             updateRecordsDisplayed(numberOfRecordsToDisplay);
             closeMenu();
@@ -170,18 +165,18 @@ function Users() {
 
     // ON PAGE CHANGE
     useEffect(() => {
-        if (users.data) {
+        if (users) {
             let startIndex = page * numberOfRecordsToDisplay - numberOfRecordsToDisplay;
             let endIndex = page * numberOfRecordsToDisplay;
-            let newRecords = (isFilterApplied ? filteredRecords : users.data).slice(startIndex, endIndex)
-            setRecordsToDisplay({data: newRecords});
+            let newRecords = (isFilterApplied ? filteredRecords : users).slice(startIndex, endIndex)
+            setRecordsToDisplay(newRecords);
         }
     }, [page])
 
     // WHEN RECORDS TO DISPLAY CHANGES
     useEffect(() => {
-        if (users.data) {
-            setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users.data).length / numberOfRecordsToDisplay))
+        if (users) {
+            setNumPages(Math.ceil((isFilterApplied ? filteredRecords : users).length / numberOfRecordsToDisplay))
         }
     }, [recordsToDisplay])
 
@@ -189,33 +184,33 @@ function Users() {
         <div className='users-container'>
             <h1 className='page-header'>Users</h1>
 
-            {users.data ? (<>
-                {/* STATS */}
+            {users ? (<>
+                {/* USER STATS */}
                 <div className="stats">
                     <div className="stat">
                         <img src={"images/icons/users-dashboard.svg"} alt="" />
                         <p className='stat-title'>Users</p>
-                        <p className='stat-number'>{users.data.length}</p>
+                        <p className='stat-number'>{users.length}</p>
                     </div>
                     <div className="stat">
                         <img src={"images/icons/active-users-dashboard.svg"} alt="" />
                         <p className='stat-title'>Active Users</p>
                         <p className='stat-number'>
-                            {users.data.filter((user: any) => checkUserActive(user.lastActiveDate)).length}
+                            {users.filter((user: any) => checkUserActive(user.lastActiveDate)).length}
                         </p>
                     </div>
                     <div className="stat">
                         <img src={"images/icons/users-with-loans.svg"} alt="" />
                         <p className='stat-title'>Users with Loans</p>
                         <p className='stat-number'>
-                            {users.data.filter((user: any) => Number(user.education.loanRepayment) > 0).length}
+                            {users.filter((user: any) => Number(user.education.loanRepayment) > 0).length}
                         </p>
                     </div>
                     <div className="stat">
                         <img src={"images/icons/users-with-savings.svg"} alt="" />
                         <p className='stat-title'>Users with Savings</p>
                         <p className='stat-number'>
-                            {users.data.filter((user: any) => Number(user.accountBalance) > 0).length}
+                            {users.filter((user: any) => Number(user.accountBalance) > 0).length}
                         </p>
                     </div>
                 </div>
@@ -223,6 +218,7 @@ function Users() {
                 {/* TABLE */}
                 <div className="users-table">
                     {/* TABLE HEADERS */}
+                    {/* HEADER COLUMN 1 */}
                     <div className="first column header cell">
                         <span className='header-column-text'>Organization</span>
                         <img
@@ -232,6 +228,7 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 2 */}
                     <div className="column header cell">
                         <span className='header-column-text'>Username</span>
                         <img
@@ -241,6 +238,7 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 3 */}
                     <div className="column header cell">
                         <span className='header-column-text'>Email</span>
                         <img
@@ -250,6 +248,7 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 4 */}
                     <div className="column header cell phone">
                         <span className='header-column-text'>Phone number</span>
                         <img
@@ -259,6 +258,7 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 5 */}
                     <div className="column header cell date-joined">
                         <span className='header-column-text'>Date joined</span>
                         <img
@@ -268,6 +268,7 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 6 */}
                     <div className="column header cell">
                         <span className='header-column-text'>Status</span>
                         <img
@@ -277,44 +278,45 @@ function Users() {
                             onClick={showFilter}
                         />
                     </div>
+                    {/* HEADER COLUMN 7 */}
                     <div className="column header cell last"></div>
 
                     {/* TABLE BODY */}
-                    {recordsToDisplay.data ?
-                    (recordsToDisplay.data.length ?
+                    {recordsToDisplay ?
+                    (recordsToDisplay.length ?
                         // IF THERE ARE RECORDS TO DISPLAY
-                        recordsToDisplay.data.map((user: any, index: number) => {
+                        recordsToDisplay.map((user: any, index: number) => {
                         return (
                             <>
-                                {/* TH1 */}
+                                {/* COLUMN 1 */}
                                 <div
-                                    className={"first cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}
+                                    className={"first cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}
                                 >
                                     <span className='cell-text'>{user.orgName}</span>
                                 </div>
 
-                                {/* TH2 */}
-                                <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 2 */}
+                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{user.userName}</span>
                                 </div>
 
-                                {/* TH3 */}
-                                <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 3 */}
+                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text email'>{user.email}</span>
                                 </div>
 
-                                {/* TH4 */}
-                                <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 4 */}
+                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{user.phoneNumber}</span>
                                 </div>
 
-                                {/* TH5 */}
-                                <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 5 */}
+                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <span className='cell-text'>{formatDate(user.createdAt)}</span>
                                 </div>
 
-                                {/* TH6 */}
-                                <div className={"cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 6 */}
+                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <span
                                         className={'cell-text status ' + (
                                             checkUserActive(user.lastActiveDate) ? "active" : "inactive"
@@ -324,13 +326,13 @@ function Users() {
                                     </span>
                                 </div>
 
-                                {/* TH7 */}
-                                <div className={"last cell" + ((index == recordsToDisplay.data.length - 1) ? " bottom-cell" : "")}>
+                                {/* COLUMN 7 */}
+                                <div className={"last cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
                                     <img
                                         className='clickable'
                                         src="images/icons/vertical-dots.svg"
                                         alt=""
-                                        onClick={(ev) => {openMenu(ev, user.id)}}
+                                        onClick={(ev) => {openMenu(ev, user)}}
                                     />
                                 </div>
                             </>
@@ -389,6 +391,9 @@ function Users() {
                             <p>Blacklist User</p>
                         </div>
                     </MenuItem>
+                    {
+                        
+                    }
                     <MenuItem onClick={() => {
                         closeMenu();
                         notAvailable();
@@ -497,17 +502,18 @@ function Users() {
                     </form>
                 </Menu>  
             </>) : (
-            <div className='loading'>
-                {
-                    failedToFetchUsers ?
-                    (<p className='retry-prompt'>
-                        Failed to fetch data, click
-                        <span className='clickable retry' onClick={getUserData}>here</span>
-                        to retry
-                    </p>) :
-                    <CircularProgress />
-                }
-            </div>
+                // WHEN THERE IS AN ISSUE GETTING USER DATA
+                <div className='loading'>
+                    {
+                        failedToFetchUsers ?
+                        (<p className='retry-prompt'>
+                            Failed to fetch data, click
+                            <span className='clickable retry' onClick={getUserData}>here</span>
+                            to retry
+                        </p>) :
+                        <CircularProgress />
+                    }
+                </div>
             )}
             
             {/* TOAST CONTAINER */}

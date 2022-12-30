@@ -25,7 +25,6 @@ const formatDate = (date: Date | string) => {
     hours = String(hours).padStart(2, "0");
     let minutes = String(date.getMinutes()).padStart(2, "0");
     return `${month} ${dd}, ${year}`;
-    // return `${month} ${dd}, ${year} ${hours}:${minutes} ${amOrPm}`;
 }
 
 export { formatDate }

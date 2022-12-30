@@ -11,6 +11,7 @@ const getUser = (id: string) => {
 const checkUserActive = (lastActiveDate: any) => {
     let lastActive = new Date(lastActiveDate);
     let today = new Date();
+    if (lastActive.getFullYear() > today.getFullYear()) return true;
     let differenceInDays = (today.getTime() - lastActive.getTime()) / 1000 / 60 / 60 / 24;
     return differenceInDays < 10;
 }
