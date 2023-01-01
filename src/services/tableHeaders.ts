@@ -9,10 +9,12 @@ const tableHeaders: any[] = [
         name: 'Email'
     },
     {
-        name: 'Phone number'
+        name: 'Phone number',
+        minWidth: '150px'
     },
     {
-        name: 'Date joined'
+        name: 'Date joined',
+        minWidth: '130px'
     },
     {
         name: 'Status'

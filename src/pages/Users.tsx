@@ -44,8 +44,7 @@ function Users() {
 
     // FILTER BUTTON CLICKED
     const filterUsers = (filterState: any) => {
-        setFilteredRecords(users?.filter((user: any) => {
-            return (
+        let filteredRecords = users?.filter((user: any) => (
                 (filterState.organization ? (user.orgName == filterState.organization) : true) &&
                 (filterState.username ? user.userName.toLowerCase().includes(filterState.username.toLowerCase()) : true) &&
                 (filterState.email ? user.email.toLowerCase().includes(filterState.email.toLowerCase()) : true) && 
@@ -53,7 +52,9 @@ function Users() {
                 (filterState.phoneNumber ? user.phoneNumber.toLowerCase().includes(filterState.phoneNumber.toLowerCase()) : true) && 
                 (filterState.date ? compareDates(filterState.date, user.createdAt) : true)
             )
-        }));
+        )
+        setFilteredRecords(filteredRecords);
+        setNumberOfRecords(filteredRecords?.length || 0);
         setFilterApplied(true);
     }
 

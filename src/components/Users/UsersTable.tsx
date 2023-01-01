@@ -89,7 +89,10 @@ function UsersTable(props: {
         <div className="users-table">
             {/* TABLE HEADERS */}
             {props.headers.map((header, i) => (
-                <div className={checkFirstOrLastCell(i, props.headers)+ "column header cell"}>
+                <div
+                    className={checkFirstOrLastCell(i, props.headers)+ "column header cell"}
+                    style={{minWidth: header.minWidth || ''}}
+                >
                     <span className="header-column-text">{header.name}</span>
                     {checkFirstOrLastCell(i, props.headers) == 'last ' ? <></> : 
                         <img
@@ -244,7 +247,7 @@ function UsersTable(props: {
                 <div className="field">
                     <label htmlFor="email">Email</label>
                     <input
-                        type="email"
+                        type="text"
                         id="email"
                         name="email"
                         placeholder='Email'
