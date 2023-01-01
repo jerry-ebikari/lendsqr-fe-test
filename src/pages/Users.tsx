@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Pagination from '@mui/material/Pagination';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Users.scss";
 import { getAllUsers, checkUserActive } from '../services/userInfoService';
-import { formatDate } from '../utils/dateFormatter';
 import compareDates from "../utils/compareDates";
+import UsersTable from '../components/UsersTable';
+import tableHeaders from '../services/tableHeaders';
 
 
 function Users() {
-    const navigate = useNavigate();
     let [users, setUsers] = useState<any[] | null>(null); // all users
     let [failedToFetchUsers, setFailedToFetchUsers] = useState(false);
     let [numberOfRecords, setNumberOfRecords] = useState(10);
@@ -21,39 +18,10 @@ function Users() {
     let [recordsToDisplay, setRecordsToDisplay] = useState<any[] | null>(null);
     let [numPages, setNumPages] = useState(1);
     let [page, setPage] = useState(1);
-    let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);  // anchor element for user menu
-    let [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);  // anchor element for filter modal
-    let [userId, setUserId] = useState<any>(null);
     let [orgs, setOrgs] = useState<any>(null);
-    let [filterState, setFilterState] = useState({
-        organization: "",
-        username: "",
-        email: "",
-        date: "",
-        phoneNumber: "",
-        status: ""
-    });
     let [isFilterApplied, setFilterApplied] = useState<Boolean>(false);
     let [filteredRecords, setFilteredRecords] = useState<any>(null);
-    const open = Boolean(anchorEl);
-    const filterOpen = Boolean(filterAnchor);
-
-    // OPEN USER MENU
-    const openMenu = (ev: React.MouseEvent<HTMLElement>, user: any) => {
-        setAnchorEl(ev.currentTarget);
-        setUserId(user.id);
-    }
-
-    // OPEN FILTER MODAL
-    const showFilter = (ev: React.MouseEvent<HTMLElement>) => {
-        setFilterAnchor(ev.currentTarget);
-    }
-
-    // CLOSE FILTER AND USER MENUS
-    const closeMenu = () => {
-        setAnchorEl(null);
-        setFilterAnchor(null);
-    }
+    let headers = tableHeaders;
 
     // UPDATE NUMBER OF RECORDS TO DISPLAY
     const updateNumberOfRecordsToDisplay = (ev: any) => {
@@ -73,15 +41,8 @@ function Users() {
     // UPDATE PAGE NUMBER
     const updatePage = (ev: any, value: number) => setPage(value);
 
-    // NAVIGATE TO USER DETAILS PAGE
-    const viewUser = () => {
-        closeMenu();
-        navigate("/user/" + userId);
-    }
-
     // FILTER BUTTON CLICKED
-    const filter = (ev: any) => {
-        ev.preventDefault();
+    const filterUsers = (filterState: any) => {
         setFilteredRecords(users?.filter((user: any) => {
             return (
                 (filterState.organization ? (user.orgName == filterState.organization) : true) &&
@@ -93,28 +54,6 @@ function Users() {
             )
         }));
         setFilterApplied(true);
-    }
-
-    // RESET FILTER
-    const resetFilter = () => {
-        setFilterState({
-            organization: "",
-            username: "",
-            email: "",
-            date: "",
-            phoneNumber: "",
-            status: ""
-        });
-        setPage(1);
-        setFilterApplied(false);
-        closeMenu();
-    }
-
-    // ON FILTER FORM INPUT CHANGED
-    const handleChange = (ev: any) => {
-        setFilterState(prev => {
-            return {...prev, [ev.target.name]: ev.target.value}
-        });
     }
 
     // SHOW NOT AVAILABLE MESSAGE
@@ -159,7 +98,6 @@ function Users() {
         if (users) {
             setPage(1);
             updateRecordsDisplayed(numberOfRecordsToDisplay);
-            closeMenu();
         }
     }, [filteredRecords, isFilterApplied]);
 
@@ -216,147 +154,16 @@ function Users() {
                 </div>
 
                 {/* TABLE */}
-                <div className="users-table">
-                    {/* TABLE HEADERS */}
-                    {/* HEADER COLUMN 1 */}
-                    <div className="first column header cell">
-                        <span className='header-column-text'>Organization</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 2 */}
-                    <div className="column header cell">
-                        <span className='header-column-text'>Username</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 3 */}
-                    <div className="column header cell">
-                        <span className='header-column-text'>Email</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 4 */}
-                    <div className="column header cell phone">
-                        <span className='header-column-text'>Phone number</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 5 */}
-                    <div className="column header cell date-joined">
-                        <span className='header-column-text'>Date joined</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 6 */}
-                    <div className="column header cell">
-                        <span className='header-column-text'>Status</span>
-                        <img
-                            className="clickable"
-                            src="images/icons/filter.svg"
-                            alt=""
-                            onClick={showFilter}
-                        />
-                    </div>
-                    {/* HEADER COLUMN 7 */}
-                    <div className="column header cell last"></div>
-
-                    {/* TABLE BODY */}
-                    {recordsToDisplay ?
-                    (recordsToDisplay.length ?
-                        // IF THERE ARE RECORDS TO DISPLAY
-                        recordsToDisplay.map((user: any, index: number) => {
-                        return (
-                            <>
-                                {/* COLUMN 1 */}
-                                <div
-                                    className={"first cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}
-                                >
-                                    <span className='cell-text'>{user.orgName}</span>
-                                </div>
-
-                                {/* COLUMN 2 */}
-                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <span className='cell-text'>{user.userName}</span>
-                                </div>
-
-                                {/* COLUMN 3 */}
-                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <span className='cell-text email'>{user.email}</span>
-                                </div>
-
-                                {/* COLUMN 4 */}
-                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <span className='cell-text'>{user.phoneNumber}</span>
-                                </div>
-
-                                {/* COLUMN 5 */}
-                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <span className='cell-text'>{formatDate(user.createdAt)}</span>
-                                </div>
-
-                                {/* COLUMN 6 */}
-                                <div className={"cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <span
-                                        className={'cell-text status ' + (
-                                            checkUserActive(user.lastActiveDate) ? "active" : "inactive"
-                                        )}
-                                    >
-                                        {checkUserActive(user.lastActiveDate) ? "Active" : "Inactive"}
-                                    </span>
-                                </div>
-
-                                {/* COLUMN 7 */}
-                                <div className={"last cell" + ((index == (recordsToDisplay?.length || 0) - 1) ? " bottom-cell" : "")}>
-                                    <img
-                                        className='clickable'
-                                        src="images/icons/vertical-dots.svg"
-                                        alt=""
-                                        onClick={(ev) => {openMenu(ev, user)}}
-                                    />
-                                </div>
-                            </>
-                        )
-                    }) : (
-                    // IF TABLE IS EMPTY
-                    <>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                        <div className="cell"></div>
-                    </>
-                    )) : 
-                    // WHILE DATA IS LOADING
-                    <></>
-                    }
-                </div>
+                <UsersTable headers={headers} records={recordsToDisplay} orgs={orgs} filter={filterUsers}/>
+                
                 <div className="table-footer">
                     <div className="num-records">
                         <span>Showing </span>
-                        <select name="numRecordsToDisplay" value={numberOfRecordsToDisplay} onChange={updateNumberOfRecordsToDisplay}>
+                        <select
+                            name="numRecordsToDisplay"
+                            value={numberOfRecordsToDisplay}
+                            onChange={updateNumberOfRecordsToDisplay}
+                        >
                             <option value="10">10</option>
                             <option value="30">30</option>
                             <option value="50">50</option>
@@ -366,141 +173,6 @@ function Users() {
                     </div>
                     {numPages > 1 ? <Pagination count={numPages} page={page} onChange={updatePage} shape="rounded" /> : <></>}
                 </div>
-                {/* USERS MENU */}
-                <Menu
-                    id="user-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={closeMenu}
-                    MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <MenuItem onClick={viewUser}>
-                        <div className='user-menu-item'>
-                            <img src="images/icons/eye.svg" alt="" />
-                            <p>View Details</p>
-                        </div>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                        closeMenu();
-                        notAvailable();
-                    }}>
-                        <div className='user-menu-item'>
-                            <img src="images/icons/blacklist.svg" alt="" />
-                            <p>Blacklist User</p>
-                        </div>
-                    </MenuItem>
-                    {
-                        
-                    }
-                    <MenuItem onClick={() => {
-                        closeMenu();
-                        notAvailable();
-                    }}>
-                        <div className='user-menu-item'>
-                            <img src="images/icons/activate.svg" alt="" />
-                            <p>Activate User</p>
-                        </div>
-                    </MenuItem>
-                </Menu>
-
-                {/* FILTER */}
-                <Menu
-                    id="filter"
-                    anchorEl={filterAnchor}
-                    open={filterOpen}
-                    onClose={closeMenu}
-                    MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    <form className='filter-form'>
-                        <div className="field">
-                            <label htmlFor="organization">Organization</label>
-                            <select
-                                className='custom-select'
-                                name="organization"
-                                id="organization"
-                                value={filterState.organization}
-                                onChange={handleChange}
-                            >
-                                <option disabled value="">Select Organization</option>
-                                {orgs.map((org: string) => <option value={org}>{org}</option>)}
-                            </select>
-                        </div>
-                        <div className="field">
-                            <label htmlFor="username">Username</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                placeholder='User'
-                                onInput={handleChange}
-                                value={filterState.username}
-                            />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder='Email'
-                                onInput={handleChange}
-                                value={filterState.email}
-                            />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="date">Date</label>
-                            {/* <label htmlFor="date" className='date-label'>Date</label> */}
-                            <input
-                                type="date"
-                                id="date"
-                                name='date'
-                                onInput={handleChange}
-                                value={filterState.date}
-                            />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="phone">Phone Number</label>
-                            <input
-                                type="tel"
-                                id="phoneNumber"
-                                name='phoneNumber'
-                                placeholder='Phone Number'
-                                value={filterState.phoneNumber}
-                                onInput={handleChange}
-                            />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="status">Status</label>
-                            <select
-                                className='custom-select'
-                                name="status"
-                                id="status"
-                                value={filterState.status}
-                                onChange={handleChange}
-                            >
-                                <option value="" disabled>Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div className="buttons">
-                            <button className="clickable btn reset-btn" type='reset' onClick={resetFilter}>
-                                Reset
-                            </button>
-                            <button
-                                className="clickable btn filter-btn"
-                                type='submit'
-                                onClick={filter}
-                            >
-                                Filter
-                            </button>
-                        </div>
-                    </form>
-                </Menu>  
             </>) : (
                 // WHEN THERE IS AN ISSUE GETTING USER DATA
                 <div className='loading'>
