@@ -6,8 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Users.scss";
 import { getAllUsers, checkUserActive } from '../services/userInfoService';
 import compareDates from "../utils/compareDates";
-import UsersTable from '../components/UsersTable';
+import UsersTable from '../components/Users/UsersTable';
 import tableHeaders from '../services/tableHeaders';
+import UsersTableFooter from '../components/Users/UsersTableFooter';
 
 
 function Users() {
@@ -24,10 +25,10 @@ function Users() {
     let headers = tableHeaders;
 
     // UPDATE NUMBER OF RECORDS TO DISPLAY
-    const updateNumberOfRecordsToDisplay = (ev: any) => {
-        setNumberOfRecordsToDisplay(ev.target.value);
+    const updateNumberOfRecordsToDisplay = (value: number) => {
+        setNumberOfRecordsToDisplay(value);
         setPage(1);
-        updateRecordsDisplayed(ev.target.value);
+        updateRecordsDisplayed(value);
     }
 
     // UPDATE THE DISPLAYED RECORDS
@@ -39,7 +40,7 @@ function Users() {
     }
 
     // UPDATE PAGE NUMBER
-    const updatePage = (ev: any, value: number) => setPage(value);
+    const updatePage = (value: number) => setPage(value);
 
     // FILTER BUTTON CLICKED
     const filterUsers = (filterState: any) => {
@@ -154,25 +155,22 @@ function Users() {
                 </div>
 
                 {/* TABLE */}
-                <UsersTable headers={headers} records={recordsToDisplay} orgs={orgs} filter={filterUsers}/>
-                
-                <div className="table-footer">
-                    <div className="num-records">
-                        <span>Showing </span>
-                        <select
-                            name="numRecordsToDisplay"
-                            value={numberOfRecordsToDisplay}
-                            onChange={updateNumberOfRecordsToDisplay}
-                        >
-                            <option value="10">10</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span> out of {numberOfRecords}</span>
-                    </div>
-                    {numPages > 1 ? <Pagination count={numPages} page={page} onChange={updatePage} shape="rounded" /> : <></>}
-                </div>
+                <UsersTable
+                    headers={headers}
+                    records={recordsToDisplay}
+                    orgs={orgs}
+                    filter={filterUsers}
+                    showError={notAvailable}
+                />
+
+                <UsersTableFooter
+                    numberOfRecordsToDisplay={numberOfRecordsToDisplay}
+                    totalNumberOfRecords={numberOfRecords}
+                    page={page}
+                    numPages={numPages}
+                    updateRecordsDisplayed={updateNumberOfRecordsToDisplay}
+                    updatePage={updatePage}
+                />
             </>) : (
                 // WHEN THERE IS AN ISSUE GETTING USER DATA
                 <div className='loading'>

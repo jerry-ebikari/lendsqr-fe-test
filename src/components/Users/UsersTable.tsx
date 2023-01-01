@@ -2,17 +2,23 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkUserActive } from "../services/userInfoService";
-import { formatDate } from "../utils/dateFormatter";
+import { checkUserActive } from "../../services/userInfoService";
+import { formatDate } from "../../utils/dateFormatter";
+import "../../styles/UsersTable.scss";
 
 function checkFirstOrLastCell(index: number, records: any[]) {
     if (index == 0) return 'first ';
-    if (index == records.length) return 'last ';
+    if (index == records.length - 1) return 'last ';
     return '';
 }
 
-function UsersTable(props: {headers: any[], records: any[] | null, orgs: any[] | null, filter: any}) {
-
+function UsersTable(props: {
+    headers: any[],
+    records: any[] | null,
+    orgs: any[] | null,
+    filter: any,
+    showError?: Function
+}) {
     const navigate = useNavigate();
     let [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);  // anchor element for user menu
     let [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);  // anchor element for filter modal
@@ -73,7 +79,11 @@ function UsersTable(props: {headers: any[], records: any[] | null, orgs: any[] |
         navigate("/user/" + userId);
     }
 
-    const notAvailable = () => {}
+    const notAvailable = () => {
+        if (props.showError) {
+            props.showError()
+        }
+    }
     return (
         <>
         <div className="users-table">
@@ -81,12 +91,14 @@ function UsersTable(props: {headers: any[], records: any[] | null, orgs: any[] |
             {props.headers.map((header, i) => (
                 <div className={checkFirstOrLastCell(i, props.headers)+ "column header cell"}>
                     <span className="header-column-text">{header.name}</span>
-                    <img
-                        className="clickable"
-                        src="images/icons/filter.svg"
-                        alt=""
-                        onClick={showFilter}
-                    />
+                    {checkFirstOrLastCell(i, props.headers) == 'last ' ? <></> : 
+                        <img
+                            className="clickable"
+                            src="images/icons/filter.svg"
+                            alt=""
+                            onClick={showFilter}
+                        />
+                    }
                 </div>
             ))}
 
