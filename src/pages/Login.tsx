@@ -38,7 +38,8 @@ function Login() {
         name == "email" ? setEmailBlurred(true): setPasswordBlurred(true);
         checkValidity(name, isValid);
     }
-    const login = () => {
+    const login = (ev: any) => {
+        ev.preventDefault()
         localStorage.setItem("isLoggedIn", "true");
         navigate("/")
     }
@@ -51,7 +52,7 @@ function Login() {
             <div className="pane"></div>
             <img src="/images/logo.svg" alt="logo" className='login-logo' />
             <div className='login-content-container flex align-center'>
-                <form className='login-form'>
+                <form className='login-form' onSubmit={login}>
                     <h2 className='welcome-text header-text'>Welcome!</h2>
                     <p className='login-desc primary-text'>Enter details to login.</p>
                     <div className="field">
@@ -94,9 +95,8 @@ function Login() {
                     </div>
                     <a className='clickable forgot-password fs-12 fw-600'>forgot password?</a>
                     <button
-                        type='button'
+                        type='submit'
                         className='clickable login-btn fs-14 fw-600'
-                        onClick={login}
                         disabled={!emailValid || !passwordValid}
                     >
                         Log in
