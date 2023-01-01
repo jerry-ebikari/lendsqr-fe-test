@@ -33,13 +33,12 @@ function UsersTableFooter(props: {
                     {
                         props.totalNumberOfRecords < props.numberOfRecordsToDisplay ?
                         <option value={props.totalNumberOfRecords}>{props.totalNumberOfRecords}</option> :
-                        <>
-                            <option value="10">10</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </>
+                        <></>
                     }  
+                    <option value="10">10</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
                 </select>
                 <span> out of {props.totalNumberOfRecords}</span>
             </div>
